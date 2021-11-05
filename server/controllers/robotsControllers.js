@@ -7,6 +7,14 @@ const getRobots = async (req, res) => {
   res.json(robots);
 };
 
+const getRobotById = async (req, res) => {
+  const { idRobot } = req.params;
+  console.log(req.params);
+  const searchedRobot = await Robot.findById(idRobot);
+  res.json(searchedRobot);
+};
+
 module.exports = {
   getRobots,
+  getRobotById,
 };
