@@ -10,8 +10,6 @@ const robotSchema = new Schema({
     required: true,
   },
   caracteristicas: {
-    type: Object,
-    required: true,
     velocidad: {
       type: Number,
       required: true,
