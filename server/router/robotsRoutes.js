@@ -1,11 +1,9 @@
 const express = require("express");
-const debug = require("debug")("robots:routes");
+// const debug = require("debug")("robots:routes");
+const { getRobots } = require("../controllers/robotsControllers");
 
 const router = express.Router();
 
-router.use("/", (req, res) => {
-  debug("hola");
-  res.json({ nombre: "hola" });
-});
+router.use("/", getRobots);
 
 module.exports = router;
