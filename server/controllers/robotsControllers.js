@@ -7,14 +7,37 @@ const getRobots = async (req, res) => {
   res.json(robots);
 };
 
-const getRobotById = async (req, res) => {
+const getRobotById = async (req, res, next) => {
   const { idRobot } = req.params;
-  console.log(req.params);
-  const searchedRobot = await Robot.findById(idRobot);
-  res.json(searchedRobot);
+  try {
+    const searchedRobot = await Robot.findById(idRobot);
+    if (searchedRobot) {
+      res.json(searchedRobot);
+    } else {
+      const error = new Error("Id no encontrada");
+      error.code = 404;
+      throw error;
+    }
+  } catch (error) {
+    error.code = 400;
+    next(error);
+  }
+};
+
+const createRobot = async (req, res, next) => {
+  try {
+    const robot = req.body;
+    const newRobot = await Robot.create(robot);
+    res.json(newRobot);
+  } catch (error) {
+    error.code = 400;
+    error.message = "Objeto no váido";
+    next(error);
+  }
 };
 
 module.exports = {
   getRobots,
   getRobotById,
+  createRobot,
 };
