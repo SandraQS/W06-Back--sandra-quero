@@ -22,6 +22,6 @@ const initServer = (port) => {
 
 app.use(morgan("dev"));
 app.use(express.json());
-app.use("/", robotsRoutes);
+app.use("/robots", robotsRoutes);
 
 module.exports = initServer;
