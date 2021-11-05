@@ -35,9 +35,21 @@ const createRobot = async (req, res, next) => {
     next(error);
   }
 };
+const updateRobot = async (req, res, next) => {
+  try {
+    const { _id } = req.body;
+    const updateRobotById = await Robot.findByIdAndUpdate(_id, req.body);
+    res.json(updateRobotById);
+  } catch (error) {
+    error.code = 400;
+    error.message = "Parece que algo ha fallado, revisa los datos introducidos";
+    next(error);
+  }
+};
 
 module.exports = {
   getRobots,
   getRobotById,
   createRobot,
+  updateRobot,
 };
