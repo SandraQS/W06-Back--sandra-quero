@@ -38,7 +38,9 @@ const createRobot = async (req, res, next) => {
 const updateRobot = async (req, res, next) => {
   try {
     const { _id } = req.body;
-    const updateRobotById = await Robot.findByIdAndUpdate(_id, req.body);
+    const updateRobotById = await Robot.findByIdAndUpdate(_id, req.body, {
+      runValidators: true,
+    });
     res.json(updateRobotById);
   } catch (error) {
     error.code = 400;
@@ -47,9 +49,16 @@ const updateRobot = async (req, res, next) => {
   }
 };
 
+const deleteRobotbyId = async (req, res, next) => {
+  const { idRobot } = req.params;
+  const deleteRobot = await Robot.findByIdAndDelete(idRobot);
+  res.json(deleteRobot);
+};
+
 module.exports = {
   getRobots,
   getRobotById,
   createRobot,
   updateRobot,
+  deleteRobotbyId,
 };

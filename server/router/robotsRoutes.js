@@ -5,6 +5,7 @@ const {
   getRobotById,
   createRobot,
   updateRobot,
+  deleteRobotbyId,
 } = require("../controllers/robotsControllers");
 
 const router = express.Router();
@@ -16,5 +17,7 @@ router.get("/:idRobot", getRobotById);
 router.post("/create", createRobot);
 
 router.put("/update", updateRobot);
+
+router.delete("/delete/:idRobot", deleteRobotbyId);
 
 module.exports = router;
