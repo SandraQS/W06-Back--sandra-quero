@@ -35,6 +35,7 @@ const createRobot = async (req, res, next) => {
     next(error);
   }
 };
+
 const updateRobot = async (req, res, next) => {
   try {
     const { _id } = req.body;
@@ -50,9 +51,15 @@ const updateRobot = async (req, res, next) => {
 };
 
 const deleteRobotbyId = async (req, res, next) => {
-  const { idRobot } = req.params;
-  const deleteRobot = await Robot.findByIdAndDelete(idRobot);
-  res.json(deleteRobot);
+  try {
+    const { idRobot } = req.params;
+    await Robot.findByIdAndDelete(idRobot);
+    res.json({ id: idRobot });
+  } catch (error) {
+    error.code = 400;
+    error.message = "Esta id no existe";
+    next(error);
+  }
 };
 
 module.exports = {
