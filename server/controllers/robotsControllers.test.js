@@ -166,7 +166,7 @@ describe("Given createRobot function", () => {
   describe("When it receives a function next and rejected error", () => {
     test("Then it should called next function with the error object, and error.code is 400", async () => {
       const error = {};
-      Robot.findById = jest.fn().mockRejectedValue(error);
+      Robot.create = jest.fn().mockRejectedValue(error);
 
       const res = {
         json: jest.fn(),
@@ -176,7 +176,7 @@ describe("Given createRobot function", () => {
         params: {},
       };
 
-      await getRobotById(req, res, next);
+      await createRobot(req, res, next);
 
       expect(next).toHaveBeenCalledWith(error);
       expect(error.code).toBe(400);
