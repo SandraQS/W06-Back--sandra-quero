@@ -4,6 +4,7 @@ const {
   getRobotById,
   createRobot,
   deleteRobotbyId,
+  updateRobot,
 } = require("./robotsControllers");
 
 jest.mock("../../database/models/robot");
@@ -190,8 +191,8 @@ describe("Given createRobot function", () => {
 });
 
 describe("Given deleteRobotbyId function", () => {
-  describe("When it receives ", () => {
-    test("Then it should call the method json without object", async () => {
+  describe("When it receives a req object with id", () => {
+    test("Then it should call the method findByIdAndDelete", async () => {
       const idRobot = "61855ad154ce63991d588ddb";
 
       const req = { params: idRobot };
@@ -221,6 +222,73 @@ describe("Given deleteRobotbyId function", () => {
       };
 
       await deleteRobotbyId(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(error);
+      expect(error.code).toBe(400);
+    });
+  });
+});
+
+describe("Given updateRobot function", () => {
+  describe("When it receives an object res, and req object", () => {
+    test("Then it should call the method Robot.findByIdAndUpdate", async () => {
+      const robot = {
+        caracteristicas: {
+          velocidad: 3,
+          resistencia: 10,
+          creacion: "1996-05-19T22:00:00.000Z",
+        },
+        _id: "61857c0154ce63991d588ddc",
+        nombre: "Oreo",
+        imagen:
+          "https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/styles/hc_1440x810/public/media/image/2020/04/astro-robot-ps5-1920415.jpg?h=d1cb525d&itok=NpaKRK-Q",
+      };
+      const newRobot = {
+        caracteristicas: {
+          velocidad: 5,
+          resistencia: 10,
+          creacion: "1996-05-19T22:00:00.000Z",
+        },
+        _id: "61857c0154ce63991d588ddc",
+        nombre: "Oreo",
+        imagen:
+          "https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/styles/hc_1440x810/public/media/image/2020/04/astro-robot-ps5-1920415.jpg?h=d1cb525d&itok=NpaKRK-Q",
+      };
+      const req = { body: robot };
+      const res = {
+        json: jest.fn(),
+      };
+      const next = jest.fn();
+
+      Robot.findByIdAndUpdate = jest.fn().mockResolvedValue(newRobot);
+
+      await updateRobot(req, res, next);
+      expect(Robot.findByIdAndUpdate).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(newRobot);
+    });
+  });
+  describe("When it receives a function next and rejected error", () => {
+    test("Then it should called next function with the error object, and error.code is 400", async () => {
+      const error = {};
+      Robot.findByIdAndUpdate = jest.fn().mockRejectedValue(error);
+      const robot = {
+        caracteristicas: {
+          velocidad: 3,
+          resistencia: 10,
+          creacion: "1996-05-19T22:00:00.000Z",
+        },
+        _id: "61857c0154ce63991d588ddc",
+        nombre: "Oreo",
+        imagen:
+          "https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/styles/hc_1440x810/public/media/image/2020/04/astro-robot-ps5-1920415.jpg?h=d1cb525d&itok=NpaKRK-Q",
+      };
+      const req = { body: robot };
+      const res = {
+        json: jest.fn(),
+      };
+      const next = jest.fn();
+
+      await updateRobot(req, res, next);
 
       expect(next).toHaveBeenCalledWith(error);
       expect(error.code).toBe(400);
