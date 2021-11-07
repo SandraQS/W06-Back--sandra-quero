@@ -163,4 +163,23 @@ describe("Given createRobot function", () => {
       expect(res.json).toHaveBeenCalledWith(robot);
     });
   });
+  describe("When it receives a function next and rejected error", () => {
+    test("Then it should called next function with the error object, and error.code is 400", async () => {
+      const error = {};
+      Robot.findById = jest.fn().mockRejectedValue(error);
+
+      const res = {
+        json: jest.fn(),
+      };
+      const next = jest.fn();
+      const req = {
+        params: {},
+      };
+
+      await getRobotById(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(error);
+      expect(error.code).toBe(400);
+    });
+  });
 });
