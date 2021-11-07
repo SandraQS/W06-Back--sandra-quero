@@ -92,6 +92,29 @@ describe("Given getRobotById function", () => {
     });
   });
 
+  describe("When it receives an unknow id", () => {
+    test("Then it should called next function with the error", async () => {
+      const idRobot = "2";
+      Robot.findById = jest.fn().mockResolvedValue(null);
+
+      const res = {
+        json: jest.fn(),
+      };
+
+      const req = {
+        params: { idRobot },
+      };
+
+      const error = new Error("Id no encontrada");
+
+      const next = jest.fn();
+
+      await getRobotById(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(error);
+    });
+  });
+
   describe("When it receives a function next and rejected error", () => {
     test("Then it should called next function with the error object", async () => {
       const error = {
