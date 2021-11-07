@@ -1,5 +1,10 @@
 const Robot = require("../../database/models/robot");
-const { getRobots, getRobotById, createRobot } = require("./robotsControllers");
+const {
+  getRobots,
+  getRobotById,
+  createRobot,
+  deleteRobotbyId,
+} = require("./robotsControllers");
 
 jest.mock("../../database/models/robot");
 
@@ -177,6 +182,45 @@ describe("Given createRobot function", () => {
       };
 
       await createRobot(req, res, next);
+
+      expect(next).toHaveBeenCalledWith(error);
+      expect(error.code).toBe(400);
+    });
+  });
+});
+
+describe("Given deleteRobotbyId function", () => {
+  describe("When it receives ", () => {
+    test("Then it should call the method json without object", async () => {
+      const idRobot = "61855ad154ce63991d588ddb";
+
+      const req = { params: idRobot };
+      const res = {
+        id: idRobot,
+        json: jest.fn(),
+      };
+      Robot.findByIdAndDelete = jest.fn().mockResolvedValue(res);
+      const next = jest.fn();
+      await deleteRobotbyId(req, res, next);
+
+      expect(Robot.findByIdAndDelete).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalled();
+    });
+  });
+  describe("When it receives a function next and rejected error", () => {
+    test("Then it should called next function with the error object, and error.code is 400", async () => {
+      const error = {};
+      Robot.findByIdAndDelete = jest.fn().mockRejectedValue(error);
+
+      const res = {
+        json: jest.fn(),
+      };
+      const next = jest.fn();
+      const req = {
+        params: {},
+      };
+
+      await deleteRobotbyId(req, res, next);
 
       expect(next).toHaveBeenCalledWith(error);
       expect(error.code).toBe(400);
