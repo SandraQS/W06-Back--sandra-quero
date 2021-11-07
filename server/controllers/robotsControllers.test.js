@@ -1,5 +1,5 @@
 const Robot = require("../../database/models/robot");
-const { getRobots, getRobotById } = require("./robotsControllers");
+const { getRobots, getRobotById, createRobot } = require("./robotsControllers");
 
 jest.mock("../../database/models/robot");
 
@@ -133,6 +133,34 @@ describe("Given getRobotById function", () => {
       await getRobotById(req, res, next);
 
       expect(next).toHaveBeenCalledWith(error);
+    });
+  });
+});
+
+describe("Given createRobot function", () => {
+  describe("When it receives an object res, and req object", () => {
+    test("Then it should call the method json with object", async () => {
+      const robot = {
+        caracteristicas: {
+          velocidad: 3,
+          resistencia: 10,
+          creacion: "1996-05-19T22:00:00.000Z",
+        },
+        _id: "61857c0154ce63991d588ddc",
+        nombre: "Oreo",
+        imagen:
+          "https://cdn.hobbyconsolas.com/sites/navi.axelspringer.es/public/styles/hc_1440x810/public/media/image/2020/04/astro-robot-ps5-1920415.jpg?h=d1cb525d&itok=NpaKRK-Q",
+      };
+      const req = { body: robot };
+      const res = {
+        json: jest.fn(),
+      };
+      Robot.create = jest.fn().mockResolvedValue(robot);
+
+      await createRobot(req, res);
+
+      expect(Robot.find).toHaveBeenCalled();
+      expect(res.json).toHaveBeenCalledWith(robot);
     });
   });
 });
