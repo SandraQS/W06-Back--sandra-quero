@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-// const jwt = require("jsonwebtoken");
+const jwt = require("jsonwebtoken");
 const Usuario = require("../../database/models/users");
 
 const createUsuario = async (req, res) => {
@@ -16,14 +16,31 @@ const createUsuario = async (req, res) => {
   }
 };
 
-const createUserToken = (req, res, next) => {
+const createUserToken = async (req, res, next) => {
   const { usuario, password } = req.body;
-  if (!usuario) {
-    const error = new Error("Usuario no encontrado");
+  try {
+    const user = await Usuario.findOne({ usuario });
+    if (!user) {
+      const error = new Error("Usuario no encontrado");
+      error.code = 401;
+      next(error);
+    } else {
+      const passExist = await bcrypt.compare(password, user.password);
+      console.log(passExist);
+      if (!passExist) {
+        const error = new Error("algo ha fallado");
+        error.code = 401;
+        next(error);
+      } else {
+        const token = jwt.sign({ user, id: user.id }, process.env.SECRET_TOKEN);
+
+        res.json({ token });
+      }
+    }
+  } catch (error) {
+    error.message = "No autorizado";
     error.code = 401;
     next(error);
-  } else {
-    // const token = jwt.
   }
 };
 
