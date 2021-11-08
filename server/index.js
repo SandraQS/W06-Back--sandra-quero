@@ -4,6 +4,7 @@ const debug = require("debug")("robots:server");
 const chalk = require("chalk");
 const morgan = require("morgan");
 const robotsRoutes = require("./router/robotsRoutes");
+const usuariosRouter = require("./router/usuariosRouter");
 const { handlerNotFound, handlerGeneralError } = require("./error");
 
 const app = express();
@@ -28,6 +29,7 @@ const initServer = (port) => {
 app.use(morgan("dev"));
 app.use(express.json());
 app.use("/robots", robotsRoutes);
+app.use("/login", usuariosRouter);
 app.use(handlerNotFound);
 app.use(handlerGeneralError);
 
