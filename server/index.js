@@ -28,8 +28,8 @@ const initServer = (port) => {
 
 app.use(morgan("dev"));
 app.use(express.json());
-app.use("/robots", robotsRoutes);
 app.use("/login", usuariosRouter);
+app.use("/robots", robotsRoutes);
 app.use(handlerNotFound);
 app.use(handlerGeneralError);
 
