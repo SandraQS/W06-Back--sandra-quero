@@ -21,14 +21,14 @@ const createUserToken = async (req, res, next) => {
   try {
     const user = await Usuario.findOne({ usuario });
     if (!user) {
-      const error = new Error("Usuario no encontrado");
+      const error = new Error("Algo ha fallado");
       error.code = 401;
       next(error);
     } else {
       const passExist = await bcrypt.compare(password, user.password);
       console.log(passExist);
       if (!passExist) {
-        const error = new Error("algo ha fallado");
+        const error = new Error("Algo ha fallado");
         error.code = 401;
         next(error);
       } else {

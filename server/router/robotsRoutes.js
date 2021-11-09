@@ -8,18 +8,16 @@ const {
   deleteRobotbyId,
 } = require("../controllers/robotsControllers");
 
-const checkToken = require("../middlewares/robotsMiddleware");
-
 const router = express.Router();
 
 router.get("/", getRobots);
 
 router.get("/:idRobot", getRobotById);
 
-router.post("/create", checkToken, createRobot);
+router.post("/create", createRobot);
 
-router.put("/update", checkToken, updateRobot);
+router.put("/update", updateRobot);
 
-router.delete("/delete/:idRobot", checkToken, deleteRobotbyId);
+router.delete("/delete/:idRobot", deleteRobotbyId);
 
 module.exports = router;
