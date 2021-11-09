@@ -15,7 +15,7 @@ const initDB = (conectionDBString) =>
       resolve();
     });
 
-    mongoose.conection.on("close", () => {
+    mongoose.connection.on("close", () => {
       debug(chalk.green("La base de datos se ha desconectado"));
     });
   });

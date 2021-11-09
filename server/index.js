@@ -41,4 +41,4 @@ app.use("/robots", authMidelware, robotsRoutes);
 app.use(handlerNotFound);
 app.use(handlerGeneralError);
 
-module.exports = initServer;
+module.exports = { initServer, app };
