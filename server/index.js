@@ -11,7 +11,6 @@ const { authMidelware } = require("./middlewares/authMidelware");
 const app = express();
 
 app.use(cors());
-app.use(express());
 
 const initServer = (port) => {
   const server = app.listen(port, () => {
