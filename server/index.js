@@ -12,19 +12,26 @@ const app = express();
 
 app.use(cors());
 
-const initServer = (port) => {
-  const server = app.listen(port, () => {
-    debug(chalk.yellow(`Escuchando en el puerto ${port}`));
-  });
+const initServer = (port) =>
+  new Promise((resolve, reject) => {
+    const server = app.listen(port, () => {
+      debug(chalk.yellow(`Escuchando en el puerto ${port}`));
+      resolve(server);
+    });
 
-  server.on("error", (error) => {
-    debug(chalk.red(`ERROR! Ha habido un error al iniciar el servidor`));
+    server.on("error", (error) => {
+      debug(chalk.red(`ERROR! Ha habido un error al iniciar el servidor`));
 
-    if (error.code === "EADDRINUSE") {
-      debug(chalk.red(`El puerto está ocupado`));
-    }
+      if (error.code === "EADDRINUSE") {
+        debug(chalk.red(`El puerto está ocupado`));
+      }
+      reject();
+    });
+
+    server.on("close", () => {
+      debug(chalk.yellow("Servidor desconectado"));
+    });
   });
-};
 
 app.use(morgan("dev"));
 app.use(express.json());
@@ -33,4 +40,4 @@ app.use("/robots", authMidelware, robotsRoutes);
 app.use(handlerNotFound);
 app.use(handlerGeneralError);
 
-module.exports = initServer;
+module.exports = { initServer, app };
